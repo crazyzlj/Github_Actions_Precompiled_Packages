@@ -33,7 +33,7 @@ jobs:
         }
 
     - name: Build mongo-c-driver
-      run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build -mongoVersion ${{ matrix.run }} -installPath ${{github.workspace}}\releases
+      run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build-${{ matrix.mongoversion }} -mongoVersion ${{ matrix.mongoversion }} -installPath ${{github.workspace}}\releases
 
     - name: Commit built library
       run: |
