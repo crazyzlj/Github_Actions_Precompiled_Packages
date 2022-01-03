@@ -33,6 +33,9 @@ jobs:
           Write-Host "Branch release not exist, checkout for a new branch."
           git checkout -b release
         }
+        Remove-Item ".github" -recurse -force
+        git add .
+        git commit -m "remove old code"
         git merge --no-ff -m "merge changes of main branch" main --allow-unrelated-histories
 
     - name: Build mongo-c-driver
