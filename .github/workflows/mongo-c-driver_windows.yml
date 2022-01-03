@@ -39,6 +39,9 @@ jobs:
       run: |
         git config --global user.name 'crazyzlj'
         git config --global user.email 'crazyzlj@gmail.com'
+        if (git ls-remote --exit-code --heads origin release) {
+          git pull
+        }
         git add .
         git commit -am "Build mongo-c-driver on Windows"
         git push origin release
