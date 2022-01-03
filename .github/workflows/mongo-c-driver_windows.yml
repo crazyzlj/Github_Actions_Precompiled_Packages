@@ -29,14 +29,14 @@ jobs:
           Write-Host "Branch release exists, pull it."
           git pull
           git checkout -b release origin/release
+          Remove-Item ".github" -recurse -force
+          git add .
+          git commit -m "remove old code"
+          git merge --no-ff -m "merge changes of main branch" main --allow-unrelated-histories
         } else {
           Write-Host "Branch release not exist, checkout for a new branch."
           git checkout -b release
         }
-        Remove-Item ".github" -recurse -force
-        git add .
-        git commit -m "remove old code"
-        git merge --no-ff -m "merge changes of main branch" main --allow-unrelated-histories
 
     - name: Build mongo-c-driver
       run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build-${{ matrix.mongoversion }} -mongoVersion ${{ matrix.mongoversion }} -installPath ${{github.workspace}}\releases

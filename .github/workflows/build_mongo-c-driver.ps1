@@ -16,7 +16,7 @@ $version = $mongoVersion
 $url = "https://github.com/mongodb/mongo-c-driver/releases/download/$version/mongo-c-driver-$version.tar.gz"
 $zipFile = "$mongoCPath\mongo-c-driver.tar.gz"
 $unzippedFolderContent ="$mongoCPath\mongo-c-driver-$version"
-$mongoCLibPath = "$buildPath\mongo-c-driver-$version-vs2019x64"
+$mongoCLibPath = "$mongoCPath\mongo-c-driver-$version-vs2019x64"
 $mongoCLibZip = "$installPath\mongo-c-driver-$version-vs2019x64.zip"
 
 Write-Host "Build path: $mongoCPath"
@@ -50,10 +50,10 @@ cmake --build . --config RelWithDebInfo --target install -- /m:2
 # Remove-Item "$unzippedFolderContent\cmake-build" -recurse -force 
 # Remove-Item $zipFile -recurse -force
 Set-Location $mongoCPath
-if ((Test-Path -path $installPath) -eq $false) {
-    mkdir $installPath
-}
 if ((Test-Path -path $mongoCLibZip) -eq $true) {
     Remove-Item $mongoCLibZip -recurse -force
+}
+if ((Test-Path -path $installPath) -eq $false) {
+    mkdir $installPath
 }
 Compress-Archive -Path "$mongoCLibPath\*" -DestinationPath $mongoCLibZip
