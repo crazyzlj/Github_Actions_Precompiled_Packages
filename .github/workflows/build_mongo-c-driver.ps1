@@ -25,7 +25,7 @@ if ((Test-Path -path $installPath) -eq $false) {
     mkdir $installPath
 }
 Set-Location $installPath
-if ((Test-Path -path "CHANGELOG.md") -eq $false) {
+if ((Test-Path -path "$installPath\CHANGELOG.md") -eq $false) {
     New-Item -Path . -Name "CHANGELOG.md" -ItemType "file" -Value "Change log`n`n"
 }
 
