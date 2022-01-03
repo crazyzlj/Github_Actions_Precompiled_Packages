@@ -24,12 +24,12 @@ jobs:
     - name: Create new release branch or checkout and pull the release branch
       run: |
         if (git ls-remote --exit-code --heads origin release) { 
-          Write-Host "Branch release not exist, create it."
-          git checkout -b release
-        } else {
           Write-Host "Branch release exists, pull it."
           git pull
           git checkout -b release origin/release
+        } else {
+          Write-Host "Branch release not exist, checkout for a new branch."
+          git checkout -b release
         }
 
     - name: Build mongo-c-driver

@@ -26,7 +26,7 @@ if ((Test-Path -path $installPath) -eq $false) {
 }
 Set-Location $installPath
 if ((Test-Path -path "README.md") -eq $false) {
-    New-Item -Path . -Name "CHANGELOG.md" -ItemType "file" -Value "Change log\n\n"
+    New-Item -Path . -Name "CHANGELOG.md" -ItemType "file" -Value "Change log`n`n"
 }
 
 Add-Content -Path "CHANGELOG.md" -Value (Get-Date) -PassThru
