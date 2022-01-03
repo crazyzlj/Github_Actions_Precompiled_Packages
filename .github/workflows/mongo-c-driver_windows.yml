@@ -41,4 +41,4 @@ jobs:
         git config --global user.email 'crazyzlj@gmail.com'
         git add .
         git commit -am "Build mongo-c-driver on Windows"
-        git push origin/release
+        git push origin release
