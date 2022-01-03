@@ -23,6 +23,8 @@ jobs:
 
     - name: Create new release branch or checkout and pull the release branch
       run: |
+        git config --global user.name 'crazyzlj'
+        git config --global user.email 'crazyzlj@gmail.com'
         if (git ls-remote --exit-code --heads origin release) { 
           Write-Host "Branch release exists, pull it."
           git pull
@@ -38,8 +40,6 @@ jobs:
 
     - name: Commit built library
       run: |
-        git config --global user.name 'crazyzlj'
-        git config --global user.email 'crazyzlj@gmail.com'
         if (git ls-remote --exit-code --heads origin release) {
           git pull
         }
