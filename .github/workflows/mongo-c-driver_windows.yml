@@ -1,0 +1,44 @@
+# Build mongo-c-driver on latest Windows using available Visual Studio Versions.
+
+name: Build mongo-c-driver
+
+on:
+    push:
+        branches: [ main ]
+
+    workflow_dispatch:
+
+jobs:
+  
+  mongo-c-driver:
+    runs-on: windows-latest
+
+    strategy:
+      matrix: 
+        mongoversion: ['1.16.2', '1.20.0']
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create new release branch or checkout and pull the release branch
+      run: |
+        if (git ls-remote --exit-code --heads origin release) { 
+          Write-Host "Branch release not exist, create it."
+          git checkout -b release
+        } else {
+          Write-Host "Branch release exists, pull it."
+          git pull
+          git checkout -b release origin/release
+        }
+
+    - name: Build mongo-c-driver
+      run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build -mongoVersion ${{ matrix.run }} -installPath ${{github.workspace}}\releases
+
+    - name: Commit built library
+      run: |
+        git config --global user.name 'crazyzlj'
+        git config --global user.email 'crazyzlj@gmail.com'
+        git add .
+        git commit -am "Build mongo-c-driver on Windows"
+        git push origin/release
