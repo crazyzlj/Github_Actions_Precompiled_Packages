@@ -38,7 +38,7 @@ Set-Location $unzippedFolderContent
 # Refers to http://mongoc.org/libmongoc/current/installing.html
 mkdir cmake-build
 Set-Location cmake-build
-cmake -G "Visual Studio 16 2019" -A x64 "-DCMAKE_INSTALL_PREFIX=$mongoCPath" `
+cmake -G "Visual Studio 16 2019" -A x64 "-DCMAKE_INSTALL_PREFIX=$mongoCLibPath" `
 "-DCMAKE_PREFIX_PATH=$mongoCLibPath" -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
 cmake --build . --config RelWithDebInfo --target install -- /m:2
 # Write-Host "Setting environmetal paths of mongo-c-driver……"
