@@ -11,17 +11,18 @@ on:
 jobs:
   
   mongo-c-driver:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     strategy:
       matrix: 
-        mongoversion: ['1.16.2', '1.20.0']
+        mongoversion: ['1.16.2', '1.17.7', '1.18.0', '1.19.2', '1.20.1', '1.21.2', '1.22.2', '1.23.5', '1.24.4', '1.25.4', '1.26.2', '1.27.6', '1.28.0']
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
     - name: Create new release branch or checkout and pull the release branch
+      shell: pwsh
       run: |
         git config --global user.name 'crazyzlj'
         git config --global user.email 'crazyzlj@gmail.com'
@@ -32,6 +33,7 @@ jobs:
           Remove-Item ".github" -recurse -force
           git add .
           git commit -m "remove old code"
+          Write-Host "Merge master Branch."
           git merge --no-ff -m "merge changes of main branch" main --allow-unrelated-histories
         } else {
           Write-Host "Branch release not exist, checkout for a new branch."
@@ -39,9 +41,11 @@ jobs:
         }
 
     - name: Build mongo-c-driver
+      shell: pwsh
       run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build-${{ matrix.mongoversion }} -mongoVersion ${{ matrix.mongoversion }} -installPath ${{github.workspace}}\releases
 
     - name: Commit built library
+      shell: pwsh
       run: |
         git add .
         git commit -am "Build mongo-c-driver on Windows"
