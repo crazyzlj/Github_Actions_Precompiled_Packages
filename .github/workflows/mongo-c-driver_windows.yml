@@ -26,30 +26,13 @@ jobs:
       run: |
         git config --global user.name 'crazyzlj'
         git config --global user.email 'crazyzlj@gmail.com'
-        if (git ls-remote --exit-code --heads origin release) { 
-          Write-Host "Branch release exists, pull it."
-          git pull
-          git checkout -b release origin/release
-          Remove-Item ".github" -recurse -force
-          git add .
-          git commit -m "remove old code"
-          Write-Host "Merge master Branch."
-          git merge --no-ff -m "merge changes of main branch" main --allow-unrelated-histories
-        } else {
-          Write-Host "Branch release not exist, checkout for a new branch."
-          git checkout -b release
-        }
+
 
     - name: Build mongo-c-driver
       shell: pwsh
       run: ${{github.workspace}}\.github\workflows\build_mongo-c-driver.ps1 -buildPath ${{github.workspace}}\build-${{ matrix.mongoversion }} -mongoVersion ${{ matrix.mongoversion }} -installPath ${{github.workspace}}\releases
 
-    - name: Commit built library
-      shell: pwsh
-      run: |
-        git add .
-        git commit -am "Build mongo-c-driver ${{ matrix.mongoversion }} on Windows"
-        while (!(git ls-remote --exit-code --heads origin release)) {
-          git pull origin release
-        }
-        git push origin release
+    - uses: actions/upload-artifact@v4
+      with:
+        name: mongo-c-driver-${{ matrix.mongoversion }}-vs2019x64
+        path: ${{github.workspace}}/releases/mongo-c-driver-${{ matrix.mongoversion }}-vs2019x64.zip
