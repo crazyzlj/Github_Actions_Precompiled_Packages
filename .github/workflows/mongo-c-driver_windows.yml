@@ -48,8 +48,8 @@ jobs:
       shell: pwsh
       run: |
         git add .
-        git commit -am "Build mongo-c-driver on Windows"
-        if (git ls-remote --exit-code --heads origin release) {
+        git commit -am "Build mongo-c-driver ${{ matrix.mongoversion }} on Windows"
+        while (git ls-remote --exit-code --heads origin release) {
           git pull origin release
         }
         git push origin release
