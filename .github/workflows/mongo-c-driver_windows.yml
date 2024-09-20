@@ -49,7 +49,7 @@ jobs:
       run: |
         git add .
         git commit -am "Build mongo-c-driver ${{ matrix.mongoversion }} on Windows"
-        while (git ls-remote --exit-code --heads origin release) {
+        while (!(git ls-remote --exit-code --heads origin release)) {
           git pull origin release
         }
         git push origin release
