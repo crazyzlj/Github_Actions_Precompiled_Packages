@@ -16,8 +16,8 @@ $version = $mongoVersion
 #$url = "https://github.com/mongodb/mongo-c-driver/releases/download/$version/mongo-c-driver-$version.tar.gz"
 $url = "https://github.com/mongodb/mongo-c-driver/archive/refs/tags/$version.zip"
 #$zipFile = "$mongoCPath\mongo-c-driver.tar.gz"
-$zipFile = "$mongoCPath\mongo-c-driver-$version.zip"
-$unzippedFolderContent ="$mongoCPath\mongo-c-driver-$version"
+$zipFile = "$mongoCPath\src.zip"
+$unzippedFolderContent ="$mongoCPath\src\mongo-c-driver-$version"
 $mongoCLibPath = "$mongoCPath\mongo-c-driver-$version-vs2019x64"
 $mongoCLibZip = "$installPath\mongo-c-driver-$version-vs2019x64.zip"
 
