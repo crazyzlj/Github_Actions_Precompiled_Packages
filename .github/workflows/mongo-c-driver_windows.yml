@@ -10,23 +10,16 @@ on:
 
 jobs:
   
-  mongo-c-driver:
+  build:
     runs-on: windows-2019
 
     strategy:
       matrix: 
-        mongoversion: ['1.16.2', '1.17.7', '1.18.0', '1.19.2', '1.20.1', '1.21.2', '1.22.2', '1.23.5', '1.24.4', '1.25.4', '1.26.2', '1.27.6', '1.28.0']
+        mongoversion: ['1.16.2', '1.28.0']
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Create new release branch or checkout and pull the release branch
-      shell: pwsh
-      run: |
-        git config --global user.name 'crazyzlj'
-        git config --global user.email 'crazyzlj@gmail.com'
-
 
     - name: Build mongo-c-driver
       shell: pwsh
@@ -36,3 +29,45 @@ jobs:
       with:
         name: mongo-c-driver-${{ matrix.mongoversion }}-vs2019x64
         path: ${{github.workspace}}/releases/mongo-c-driver-${{ matrix.mongoversion }}-vs2019x64.zip
+  
+  push-to-release-branch:
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create new release branch or checkout and pull the release branch
+      run: |
+        git config --global user.name 'crazyzlj'
+        git config --global user.email 'crazyzlj@gmail.com'
+        if (git ls-remote --exit-code --heads origin release) { 
+          Write-Host "Branch release exists, pull it."
+          git pull
+          git checkout -b release origin/release
+          Remove-Item "mongo-c-driver" -recurse -force
+          git add .
+          git commit -m "remove old releases"
+        } else {
+          Write-Host "Branch release does not exist, checkout for a new branch."
+          git switch --orphan release
+          git commit --allow-empty -m "Initial commit on orphan branch named release"
+        }
+        New-Item -itemType Directory -Path ${{github.workspace}} -Name mongo-c-driver
+    
+    - name: download-artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ${{github.workspace}}/mongo-c-driver
+        pattern: mongo-c-driver-*
+        merge-multiple: true
+
+    - name: Push the release branch
+      run: |
+        git add .
+        git commit -am "Add newly built packages on Windows"
+        if (git ls-remote --exit-code --heads origin release) {
+          git pull origin release
+        }
+        git push origin release
+        
