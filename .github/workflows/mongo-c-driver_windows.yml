@@ -46,15 +46,21 @@ jobs:
           Write-Host "Branch release exists, pull it."
           git pull
           git checkout -b release origin/release
-          Remove-Item "mongo-c-driver" -recurse -force
-          git add .
-          git commit -m "remove old releases"
+          $paths = ${{github.workspace}}/mongo-c-driver
+          foreach ($path in $paths) {
+            if (Test-Path -LiteralPath $path) {
+              Remove-Item -LiteralPath $path -Verbose -Recurse -WhatIf
+              git add .
+              git commit -m "remove $paths"
+            } else {
+              New-Item -itemType Directory -Path ${{github.workspace}} -Name mongo-c-driver
+            }
+          }
         } else {
           Write-Host "Branch release does not exist, checkout for a new branch."
           git switch --orphan release
           git commit --allow-empty -m "Initial commit on orphan branch named release"
         }
-        New-Item -itemType Directory -Path ${{github.workspace}} -Name mongo-c-driver
     
     - name: download-artifacts
       uses: actions/download-artifact@v4
