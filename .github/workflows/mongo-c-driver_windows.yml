@@ -46,14 +46,15 @@ jobs:
           Write-Host "Branch release exists, pull it."
           git pull
           git checkout -b release origin/release
-          $paths = ${{github.workspace}}/mongo-c-driver
-          foreach ($path in $paths) {
-            if (Test-Path -LiteralPath $path) {
-              Remove-Item -LiteralPath $path -Verbose -Recurse -WhatIf
+
+          $pkgnames = "mongo-c-driver"
+          foreach ($pkgname in $pkgnames) {
+            if (Test-Path -LiteralPath ${{github.workspace}}/$pkgname) {
+              Remove-Item -LiteralPath ${{github.workspace}}/$pkgname -Verbose -Recurse
               git add .
               git commit -m "remove $paths"
             } else {
-              New-Item -itemType Directory -Path ${{github.workspace}} -Name mongo-c-driver
+              New-Item -itemType Directory -Path ${{github.workspace}} -Name $pkgname
             }
           }
         } else {
