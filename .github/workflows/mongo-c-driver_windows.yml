@@ -10,7 +10,7 @@ on:
 
 jobs:
   
-  build:
+  build-on-windows:
     runs-on: windows-2019
 
     strategy:
@@ -31,6 +31,7 @@ jobs:
         path: ${{github.workspace}}/releases/mongo-c-driver-${{ matrix.mongoversion }}-vs2019x64.zip
   
   push-to-release-branch:
+    needs: build-on-windows
     runs-on: windows-2019
 
     steps:
@@ -70,4 +71,3 @@ jobs:
           git pull origin release
         }
         git push origin release
-        
